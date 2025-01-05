@@ -22,9 +22,12 @@ import { ErrorMessage } from "@hookform/error-message";
 import ValueSelectbox from "@/components/controller/ValueSelectbox";
 
 export default function Page() {
+  const commandDefaultValue = "textarea";
+  const valueDefaultValue = "Hello World";
+
   const form = useForm<ControllerTest>({
     resolver: zodResolver(ControllerTestSchema),
-    // defaultValues: { command: "textarea", value: "Hello World" },
+    defaultValues: { command: commandDefaultValue, value: valueDefaultValue },
   });
 
   const command = form.watch("command");
@@ -37,10 +40,14 @@ export default function Page() {
   };
 
   useEffect(() => {
-    form.clearErrors("value");
-    return () => {
+    if (command === commandDefaultValue) {
+      //   form.setValue("value", valueDefaultValue);
+      form.resetField("value");
+    } else {
       form.setValue("value", "");
-    };
+    }
+
+    form.clearErrors("value");
   }, [command, form]);
 
   return (
